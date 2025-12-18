@@ -1,0 +1,46 @@
+from fastapi import APIRouter, HTTPException, Depends, status
+from fastapi.security import OAuth2PasswordRequestForm
+from datetime import timedelta
+
+from .. import auth
+from ..models import UserCreate, UserInDB, Token
+from ..database import users_collection
+
+router = APIRouter()
+
+@router.post("/signup", response_model=UserInDB)
+async def create_user(user: UserCreate):
+    # Check if user already exists
+    existing_user = await users_collection.find_one({"email": user.email})
+    if existing_user:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Email already registered",
+        )
+    
+    hashed_password = auth.get_password_hash(user.password)
+    user_db = user.dict()
+    user_db["hashed_password"] = hashed_password
+    del user_db["password"]
+    
+    new_user = await users_collection.insert_one(user_db)
+    created_user = await users_collection.find_one({"_id": new_user.inserted_id})
+    
+    return UserInDB(**created_user)
+
+@router.post("/login", response_model=Token)
+async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
+    user = await auth.get_user_from_db(form_data.username) # username is email
+    if not user or not auth.verify_password(form_data.password, user.hashed_password):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect email or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    
+    access_token_expires = timedelta(minutes=auth.ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token = auth.create_access_token(
+        data={"sub": user.email, "role": user.role}, expires_delta=access_token_expires
+    )
+    
+    return {"access_token": access_token, "token_type": "bearer"}

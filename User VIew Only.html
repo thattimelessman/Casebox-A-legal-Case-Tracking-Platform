@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CaseBox - Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background: #F5F5DC;
+            color: #1d1d1f;
+            overflow-x: hidden;
+        }
+        /* Header */
+        
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 1rem 5%;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 300;
+            letter-spacing: -0.5px;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .user-details {
+            text-align: right;
+        }
+        
+        .user-name {
+            font-size: 0.95rem;
+            font-weight: 400;
+        }
+        
+        .case-number {
+            font-size: 0.75rem;
+            color: #86868b;
+            font-weight: 300;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1d1d1f, #2c2c2e);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: #fff;
+        }
+        /* Progress Section */
+        
+        .progress-section {
+            margin-top: 80px;
+            padding: 60px 5% 40px;
+            text-align: center;
+        }
+        
+        .progress-title {
+            font-size: 1rem;
+            font-weight: 300;
+            color: #86868b;
+            margin-bottom: 1rem;
+            letter-spacing: 0.5px;
+        }
+        
+        .progress-bar {
+            max-width: 600px;
+            margin: 0 auto;
+            height: 4px;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #1d1d1f, #2c2c2e);
+            width: 65%;
+            border-radius: 10px;
+            transition: width 1s ease;
+        }
+        
+        .progress-percent {
+            margin-top: 0.5rem;
+            font-size: 2rem;
+            font-weight: 200;
+            letter-spacing: -1px;
+            color: #1d1d1f;
+        }
+        /* Main Grid */
+        
+        .main-container {
+            padding: 40px 5%;
+            max-width: 1600px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 280px 1fr 320px;
+            gap: 30px;
+        }
+        /* Cards */
+        
+        .card {
+            background: #fff;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .card:hover {
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 300;
+            margin-bottom: 20px;
+            color: #1d1d1f;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .card-title i {
+            font-size: 1rem;
+            opacity: 0.6;
+            color: #1d1d1f;
+        }
+        /* Left Sidebar */
+        
+        .left-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .info-item {
+            padding: 15px;
+            background: #f5f5f7;
+            border-radius: 12px;
+            border-left: 2px solid #1d1d1f;
+            margin-bottom: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .info-item:hover {
+            background: #e8e8ed;
+            transform: translateX(5px);
+        }
+        
+        .info-label {
+            font-size: 0.75rem;
+            color: #86868b;
+            margin-bottom: 5px;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        
+        .info-value {
+            font-size: 0.95rem;
+            font-weight: 400;
+            color: #1d1d1f;
+        }
+        /* AI Window */
+        
+        .ai-window {
+            background: linear-gradient(135deg, #1d1d1f, #2c2c2e);
+            border-radius: 20px;
+            padding: 40px 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .ai-window:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+        }
+        
+        .ai-window i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+        
+        .ai-window h3 {
+            font-size: 1.2rem;
+            font-weight: 300;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+            color: #fff;
+        }
+        
+        .ai-window p {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            font-weight: 300;
+            color: #fff;
+        }
+        /* Court Info */
+        
+        .court-info {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .court-item {
+            padding: 15px;
+            background: #f5f5f7;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .court-item:hover {
+            background: #e8e8ed;
+        }
+        
+        .court-item-label {
+            font-size: 0.75rem;
+            color: #86868b;
+            margin-bottom: 5px;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        
+        .court-item-value {
+            font-size: 0.9rem;
+            font-weight: 400;
+            color: #1d1d1f;
+        }
+        /* Center Content */
+        
+        .center-content {
+            background: #fff;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 20px;
+            padding: 50px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .content-header {
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .content-header h1 {
+            font-size: 2.5rem;
+            font-weight: 200;
+            margin-bottom: 10px;
+            letter-spacing: -1px;
+            color: #1d1d1f;
+        }
+        
+        .content-case-number {
+            color: #86868b;
+            font-size: 0.9rem;
+            font-weight: 300;
+        }
+        
+        .content-section {
+            margin-bottom: 40px;
+        }
+        
+        .content-section h3 {
+            font-size: 1.3rem;
+            font-weight: 300;
+            margin-bottom: 20px;
+            letter-spacing: 0.5px;
+            color: #1d1d1f;
+        }
+        
+        .content-text {
+            color: #6e6e73;
+            line-height: 1.8;
+            font-size: 0.95rem;
+            font-weight: 300;
+        }
+        
+        .content-text p {
+            margin-bottom: 15px;
+        }
+        
+        .content-text ul {
+            margin-left: 20px;
+            margin-top: 15px;
+        }
+        
+        .content-text li {
+            margin-bottom: 10px;
+            padding-left: 10px;
+        }
+        /* Right Sidebar */
+        
+        .right-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        /* Clock */
+        
+        .clock-card {
+            background: linear-gradient(135deg, #1d1d1f, #2c2c2e);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            text-align: center;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .clock {
+            font-size: 2.5rem;
+            font-weight: 200;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+        
+        .date {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            font-weight: 300;
+            color: #fff;
+        }
+        /* Files */
+        
+        .files-card {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .files-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .file-item {
+            padding: 15px;
+            background: #f5f5f7;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+        
+        .file-item:hover {
+            background: #e8e8ed;
+            border-color: rgba(0, 0, 0, 0.2);
+            transform: translateX(5px);
+        }
+        
+        .file-name {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.9rem;
+            font-weight: 300;
+            color: #1d1d1f;
+        }
+        
+        .file-name i {
+            font-size: 1.2rem;
+        }
+        
+        .file-size {
+            font-size: 0.75rem;
+            color: #86868b;
+            font-weight: 300;
+        }
+        /* Notes */
+        
+        .notes-card {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        #notesInput {
+            width: 100%;
+            min-height: 100px;
+            padding: 15px;
+            background: #f5f5f7;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            color: #1d1d1f;
+            font-family: inherit;
+            font-size: 0.9rem;
+            font-weight: 300;
+            resize: vertical;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        #notesInput:focus {
+            outline: none;
+            background: #fff;
+            border-color: #1d1d1f;
+            box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        #notesInput::placeholder {
+            color: #86868b;
+        }
+        
+        .notes-actions {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 400;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: #1d1d1f;
+            color: #fff;
+            border: 1px solid #1d1d1f;
+        }
+        
+        .btn-primary:hover {
+            background: #2c2c2e;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn-secondary {
+            background: #f5f5f7;
+            color: #1d1d1f;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-secondary:hover {
+            background: #e8e8ed;
+        }
+        
+        .saved-notes {
+            overflow-y: auto;
+            max-height: 300px;
+        }
+        
+        .note-item {
+            background: #f5f5f7;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            position: relative;
+            border-left: 2px solid #1d1d1f;
+            transition: all 0.3s ease;
+        }
+        
+        .note-item:hover {
+            background: #e8e8ed;
+        }
+        
+        .note-timestamp {
+            font-size: 0.7rem;
+            color: #86868b;
+            margin-bottom: 8px;
+            font-weight: 300;
+        }
+        
+        .note-text {
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: #1d1d1f;
+            font-weight: 300;
+        }
+        
+        .delete-note {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(255, 59, 48, 0.1);
+            border: 1px solid rgba(255, 59, 48, 0.2);
+            color: #ff3b30;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-size: 0.8rem;
+        }
+        
+        .delete-note:hover {
+            background: rgba(255, 59, 48, 0.2);
+            transform: scale(1.1);
+        }
+        /* Status Badge */
+        
+        .status-badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 400;
+            background: rgba(52, 199, 89, 0.1);
+            color: #34c759;
+            border: 1px solid rgba(52, 199, 89, 0.2);
+        }
+        
+        .status-badge.pending {
+            background: rgba(255, 159, 10, 0.1);
+            color: #ff9f0a;
+            border-color: rgba(255, 159, 10, 0.2);
+        }
+        
+        .delete-note:hover {
+            background: rgba(255, 59, 48, 0.4);
+            transform: scale(1.1);
+        }
+        /* Status Badge */
+        
+        .status-badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 400;
+            background: rgba(52, 199, 89, 0.2);
+            color: #34c759;
+            border: 1px solid rgba(52, 199, 89, 0.3);
+        }
+        
+        .status-badge.pending {
+            background: rgba(255, 159, 10, 0.2);
+            color: #ff9f0a;
+            border-color: rgba(255, 159, 10, 0.3);
+        }
+        /* Animations */
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .card,
+        .info-item,
+        .court-item,
+        .file-item,
+        .note-item {
+            animation: fadeInUp 0.6s ease forwards;
+            opacity: 0;
+        }
+        
+        .card:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+        
+        .card:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .card:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+        
+        .card:nth-child(4) {
+            animation-delay: 0.4s;
+        }
+        
+        .card:nth-child(5) {
+            animation-delay: 0.5s;
+        }
+        
+        .card:nth-child(6) {
+            animation-delay: 0.6s;
+        }
+        /* Responsive */
+        
+        @media (max-width: 1200px) {
+            .main-container {
+                grid-template-columns: 1fr;
+            }
+            .left-sidebar,
+            .right-sidebar {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 20px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .progress-section {
+                padding: 40px 5% 30px;
+            }
+            .main-container {
+                padding: 20px 5%;
+            }
+            .center-content {
+                padding: 30px 25px;
+            }
+            .content-header h1 {
+                font-size: 1.8rem;
+            }
+            .left-sidebar,
+            .right-sidebar {
+                grid-template-columns: 1fr;
+            }
+        }
+        /* Scrollbar */
+        
+         ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+         ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+         ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+        }
+        
+         ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">CaseBox</div>
+            <div class="user-info">
+                <div class="user-details">
+                    <div class="user-name">John Doe</div>
+                    <div class="case-number">Case #2025-1234</div>
+                </div>
+                <div class="user-avatar">JD</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Progress Section -->
+    <div class="progress-section">
+        <div class="progress-title">CASE PROGRESS</div>
+        <div class="progress-bar">
+            <div class="progress-fill"></div>
+        </div>
+        <div class="progress-percent">65%</div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Left Sidebar -->
+        <div class="left-sidebar">
+            <!-- Next Hearing -->
+            <div class="card">
+                <div class="card-title"><i class="fas fa-calendar-check"></i> Next Hearing</div>
+                <div class="info-item">
+                    <div class="info-label">Date</div>
+                    <div class="info-value">Nov 15, 2025</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Time</div>
+                    <div class="info-value">10:30 AM</div>
+                </div>
+            </div>
+
+            <!-- Judge -->
+            <div class="card">
+                <div class="card-title"><i class="fas fa-gavel"></i> Judge</div>
+                <div class="info-item">
+                    <div class="info-value">Hon. Justice Sarah Mitchell</div>
+                </div>
+            </div>
+
+            <!-- Lawyer -->
+            <div class="card">
+                <div class="card-title"><i class="fas fa-user-tie"></i> Lawyer</div>
+                <div class="info-item">
+                    <div class="info-value">Adv. Robert Johnson</div>
+                </div>
+            </div>
+
+            <!-- Previous Hearing -->
+            <div class="card">
+                <div class="card-title"><i class="fas fa-history"></i> Previous Hearing</div>
+                <div class="info-item">
+                    <div class="info-label">Date</div>
+                    <div class="info-value">Oct 2, 2025</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Status</div>
+                    <div class="info-value"><span class="status-badge">Completed</span></div>
+                </div>
+            </div>
+
+            <!-- Type & Court -->
+            <div class="card">
+                <div class="card-title"><i class="fas fa-info-circle"></i> Case Information</div>
+                <div class="court-info">
+                    <div class="court-item">
+                        <div class="court-item-label">Type</div>
+                        <div class="court-item-value">Civil - Contract Dispute</div>
+                    </div>
+                    <div class="court-item">
+                        <div class="court-item-label">District</div>
+                        <div class="court-item-value">Kanpur District Court</div>
+                    </div>
+                    <div class="court-item">
+                        <div class="court-item-label">High Court</div>
+                        <div class="court-item-value">Room 304</div>
+                    </div>
+                    <div class="court-item">
+                        <div class="court-item-label">Supreme Court</div>
+                        <div class="court-item-value">Appeal Pending</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Center Content -->
+        <div class="center-content">
+            <div class="content-header">
+                <h1>Case Overview</h1>
+                <div class="content-case-number">Case #2025-1234-CV</div>
+            </div>
+
+            <div class="content-section">
+                <h3>Case Summary</h3>
+                <div class="content-text">
+                    <p><strong>Case Type:</strong> Civil Litigation - Contract Dispute</p>
+                    <p><strong>Background:</strong> This case involves a contractual disagreement between the plaintiff and defendant regarding the terms of a commercial lease agreement signed in January 2024. The plaintiff alleges breach of contract due
+                        to non-payment of agreed-upon rent for three consecutive months (June - August 2024).</p>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h3>Key Issues</h3>
+                <div class="content-text">
+                    <ul>
+                        <li>Interpretation of lease termination clause</li>
+                        <li>Calculation of damages and outstanding payments totaling ₹4,50,000</li>
+                        <li>Validity of force majeure defense claimed by defendant</li>
+                        <li>Assessment of property condition and maintenance obligations</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h3>Recent Developments</h3>
+                <div class="content-text">
+                    <p>The defendant has filed a counter-claim seeking damages for alleged property defects amounting to ₹2,75,000. Both parties have submitted their evidence, and the court has scheduled a final hearing to examine witnesses and review documentary
+                        evidence.
+                    </p>
+                    <p>Latest motion hearing held on October 2, 2025 resulted in the court ordering both parties to attempt mediation before the next hearing date.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Sidebar -->
+        <div class="right-sidebar">
+            <!-- Clock & Calendar -->
+            <div class="card clock-card">
+                <div class="clock" id="clock">00:00:00</div>
+                <div class="date" id="date">Loading...</div>
+            </div>
+
+            <!-- Files Attached -->
+            <div class="card files-card">
+                <div class="card-title"><i class="fas fa-paperclip"></i> Files Attached</div>
+                <div class="files-list">
+                    <div class="file-item">
+                        <div class="file-name">
+                            <i class="fas fa-file-pdf" style="color: #ff3b30;"></i>
+                            <span>Petition.pdf</span>
+                        </div>
+                        <div class="file-size">2.4 MB</div>
+                    </div>
+                    <div class="file-item">
+                        <div class="file-name">
+                            <i class="fas fa-file-word" style="color: #007aff;"></i>
+                            <span>Evidence.docx</span>
+                        </div>
+                        <div class="file-size">1.1 MB</div>
+                    </div>
+                    <div class="file-item">
+                        <div class="file-name">
+                            <i class="fas fa-file-image" style="color: #af52de;"></i>
+                            <span>Exhibit_A.jpg</span>
+                        </div>
+                        <div class="file-size">845 KB</div>
+                    </div>
+                    <div class="file-item">
+                        <div class="file-name">
+                            <i class="fas fa-file-pdf" style="color: #ff3b30;"></i>
+                            <span>Legal_Notice.pdf</span>
+                        </div>
+                        <div class="file-size">680 KB</div>
+                    </div>
+                    <div class="file-item">
+                        <div class="file-name">
+                            <i class="fas fa-file-alt" style="color: #34c759;"></i>
+                            <span>Witness_Statement.txt</span>
+                        </div>
+                        <div class="file-size">45 KB</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notes -->
+            <div class="card notes-card">
+                <div class="card-title"><i class="fas fa-sticky-note"></i> Notes</div>
+                <textarea id="notesInput" placeholder="Add your notes here..."></textarea>
+                <div class="notes-actions">
+                    <button class="btn btn-primary" onclick="saveNote()">
+                        <i class="fas fa-save"></i> Save
+                    </button>
+                    <button class="btn btn-secondary" onclick="clearNote()">
+                        <i class="fas fa-times"></i> Clear
+                    </button>
+                </div>
+                <div class="saved-notes" id="savedNotes"></div>
+            </div>
+
+            <!-- AI Window -->
+            <div class="ai-window" onclick="alert('AI Assistant coming soon!')">
+                <i class="fas fa-robot"></i>
+                <h3>AI Assistant</h3>
+                <p>Get instant case insights</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Clock functionality
+        function updateClock() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds}`;
+        }
+
+        function updateDate() {
+            const now = new Date();
+            const options = {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            };
+            document.getElementById('date').textContent = now.toLocaleDateString('en-US', options);
+        }
+
+        // Notes functionality
+        let notes = [];
+
+        function saveNote() {
+            const input = document.getElementById('notesInput');
+            const text = input.value.trim();
+
+            if (text === '') {
+                alert('Please write something before saving!');
+                return;
+            }
+
+            const note = {
+                id: Date.now(),
+                text: text,
+                timestamp: new Date().toLocaleString()
+            };
+
+            notes.unshift(note);
+            renderNotes();
+            input.value = '';
+        }
+
+        function clearNote() {
+            document.getElementById('notesInput').value = '';
+        }
+
+        function deleteNote(id) {
+            notes = notes.filter(note => note.id !== id);
+            renderNotes();
+        }
+
+        function renderNotes() {
+            const container = document.getElementById('savedNotes');
+
+            if (notes.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #555; font-size: 0.85rem; padding: 1rem 0; font-weight: 300;">No saved notes yet</p>';
+                return;
+            }
+
+            container.innerHTML = notes.map(note => `
+                <div class="note-item">
+                    <button class="delete-note" onclick="deleteNote(${note.id})">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                    <div class="note-timestamp">${note.timestamp}</div>
+                    <div class="note-text">${note.text}</div>
+                </div>
+            `).join('');
+        }
+
+        // Initialize
+        updateClock();
+        updateDate();
+        setInterval(updateClock, 1000);
+        setInterval(updateDate, 60000);
+        renderNotes();
+
+        // Animate progress bar on load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.querySelector('.progress-fill').style.width = '65%';
+            }, 500);
+        });
+    </script>
+</body>
+
+</html>

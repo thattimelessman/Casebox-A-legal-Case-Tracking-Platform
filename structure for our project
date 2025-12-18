@@ -1,0 +1,33 @@
+/CaseTrackerPro
+├── /backend
+│   ├── /routers
+│   │   ├── __init__.py
+│   │   ├── analytics.py
+│   │   ├── cases.py
+│   │   └── users.py
+│   ├── /uploads
+│   │   └── .gitkeep  (Empty folder for file uploads)
+│   ├── .env
+│   ├── auth.py
+│   ├── database.py
+│   ├── main.py
+│   ├── models.py
+│   ├── requirements.txt
+│   └── tasks.py
+│
+├── /frontend
+│   │   (Your existing files)
+│   ├── index.html
+│   ├── script.js
+│   ├── style.css
+│   │
+│   │   (New files to create)
+│   ├── analytics.html
+│   ├── app.js
+│   ├── auth.js
+│   ├── dashboard.html
+│   ├── login.html
+│   ├── manifest.json
+│   └── sw.js
+│
+└── README.md

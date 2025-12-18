@@ -1,0 +1,45 @@
+import os
+from fastapi_mail import FastMail, MessageSchema, ConnectionConfig
+from dotenv import load_dotenv
+from typing import List
+
+load_dotenv()
+
+conf = ConnectionConfig(
+    MAIL_USERNAME = os.getenv("MAIL_USERNAME"),
+    MAIL_PASSWORD = os.getenv("MAIL_PASSWORD"),
+    MAIL_FROM = os.getenv("MAIL_FROM"),
+    MAIL_PORT = int(os.getenv("MAIL_PORT")),
+    MAIL_SERVER = os.getenv("MAIL_SERVER"),
+    MAIL_STARTTLS = os.getenv("MAIL_STARTTLS") == "True",
+    MAIL_SSL_TLS = os.getenv("MAIL_SSL_TLS") == "True",
+    USE_CREDENTIALS = True,
+    VALIDATE_CERTS = True
+)
+
+async def send_email_async(subject: str, recipients: List[str], body: str):
+    message = MessageSchema(
+        subject=subject,
+        recipients=recipients,
+        body=body,
+        subtype="html"
+    )
+    
+    fm = FastMail(conf)
+    try:
+        await fm.send_message(message)
+        print(f"Email sent to {recipients}")
+    except Exception as e:
+        print(f"Failed to send email: {e}")
+
+async def send_hearing_reminder(email: str, case_id: str, client_name: str, hearing_date: str):
+    subject = f"Upcoming Hearing Reminder: Case {case_id}"
+    body = f"""
+    <p>Dear User,</p>
+    <p>This is a reminder for your upcoming hearing for case <strong>{case_id} ({client_name})</strong>.</p>
+    <p><strong>Hearing Date:</strong> {hearing_date}</p>
+    <p>Please log in to your CaseTracker Pro dashboard for more details.</p>
+    <p>Thank you,</p>
+    <p>The CaseTracker Pro Team</p>
+    """
+    await send_email_async(subject, [email], body)
